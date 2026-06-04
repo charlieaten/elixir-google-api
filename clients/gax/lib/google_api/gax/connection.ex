@@ -33,7 +33,11 @@ defmodule GoogleApi.Gax.Connection do
         )
       )
 
-      plug(Tesla.Middleware.DecompressResponse, [])
+      plug(Tesla.Middleware.DecompressResponse, Application.get_env(
+        unquote(Keyword.get(opts, :otp_app)),
+        :decompress_response_opts,
+        max_body_size: 32 * 1024 * 1024
+      ))
 
       plug(Tesla.Middleware.EncodeJson, engine: Poison)
 
